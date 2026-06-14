@@ -22,10 +22,9 @@ public class TravelLog {
     private Integer touristId;
 
     @Column(nullable = false)
-    private String location; 
-
+    private String location;
+    
     @Column(nullable = false)
     private LocalDate checkInDate;
-
     private LocalDate checkOutDate;
 }

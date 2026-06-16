@@ -23,7 +23,7 @@ public class TravelLog {
 
     @Column(nullable = false)
     private String location;
-    
+
     @Column(nullable = false)
     private LocalDate checkInDate;
     private LocalDate checkOutDate;

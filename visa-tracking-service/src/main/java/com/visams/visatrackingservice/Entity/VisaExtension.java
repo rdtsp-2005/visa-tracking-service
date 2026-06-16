@@ -11,7 +11,7 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+
 public class VisaExtension {
 
     @Id
@@ -26,7 +26,5 @@ public class VisaExtension {
 
     @Column(nullable = false)
     private String reason;
-
-    private LocalDate requestedOn;
 
 }

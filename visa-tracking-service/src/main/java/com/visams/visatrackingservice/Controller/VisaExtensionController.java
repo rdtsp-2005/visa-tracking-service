@@ -1,0 +1,51 @@
+package com.visams.visatrackingservice.Controller;
+
+import com.visams.visatrackingservice.Entity.VisaExtension;
+import com.visams.visatrackingservice.Service.VisaExtensionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+@RestController
+@RequestMapping("/api/visaextensions")
+public class VisaExtensionController {
+
+    @Autowired
+    private VisaExtensionService  visaExtensionService;
+
+    @GetMapping
+    public ResponseEntity<List<VisaExtension>> getAllVisaExtensions() {
+        return ResponseEntity.ok(visaExtensionService.getAllVisaExtensions());
+    }
+
+    @GetMapping("/view/{id}")
+    public ResponseEntity<VisaExtension> getVisaExtensionById(@PathVariable Integer id){
+        try{
+            return ResponseEntity.ok(visaExtensionService.getVisaExtensionById(id));
+        }catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<VisaExtension> createVisaExtension(@RequestBody VisaExtension visaExtension){
+        return ResponseEntity.status(HttpStatus.CREATED).body(visaExtensionService.createVisaExtension(visaExtension));
+    }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<VisaExtension> updateVisaExtension(@PathVariable Integer id, @RequestBody VisaExtension visaExtension){
+        try{
+            return ResponseEntity.ok(visaExtensionService.updateVisaExtension(id, visaExtension));
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("delete/{id}")
+    public ResponseEntity<VisaExtension> deleteVisaExtension(@PathVariable Integer id){
+        visaExtensionService.deleteVisaExtension(id);
+        return ResponseEntity.noContent().build();
+    }
+}

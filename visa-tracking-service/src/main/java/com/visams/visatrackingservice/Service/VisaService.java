@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class VisaService {
@@ -32,11 +34,33 @@ public class VisaService {
                 .orElseThrow(() -> new RuntimeException("Visa Not Found"+id));
 
         existing.setVisaId(updated.getVisaId());
-        existing.setTouristId(updated.getTouristId());
+        existing.setTourist(updated.getTourist());
         existing.setVisaType(updated.getVisaType());
         existing.setIssueDate(updated.getIssueDate());
         existing.setExpiryDate(updated.getExpiryDate());
         existing.setStatus(updated.getStatus());
+
+        return visaRepository.save(existing);
+    }
+
+    public Visa partialUpdateVisa(Integer id, Map<String,Object> fields){
+        Visa existing = visaRepository.findById(id).orElseThrow(() -> new RuntimeException("Visa not found:"+id));
+
+        if(fields.containsKey("visaType")){
+            existing.setVisaType((String) fields.get("visaType"));
+        }
+
+        if(fields.containsKey("issueDate")){
+            existing.setIssueDate((LocalDate)  fields.get("issueDate"));
+        }
+
+        if(fields.containsKey("expiryDate")){
+            existing.setExpiryDate((LocalDate) fields.get("expiryDate"));
+        }
+
+        if(fields.containsKey("status")){
+            existing.setStatus((String) fields.get("status"));
+        }
 
         return visaRepository.save(existing);
     }

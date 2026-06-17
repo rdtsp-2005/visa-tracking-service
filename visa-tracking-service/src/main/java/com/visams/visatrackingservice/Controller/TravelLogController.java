@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -40,6 +41,15 @@ public class TravelLogController {
     public ResponseEntity<TravelLog>  updateTravelLog(@PathVariable Integer id, @RequestBody TravelLog travelLog){
         try{
             return ResponseEntity.ok(travelLogService.updateTravelLog(id, travelLog));
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PatchMapping("/partialupdate/{id}")
+    public ResponseEntity<TravelLog> partialUpdateTravelLog(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
+        try{
+            return ResponseEntity.ok(travelLogService.partialUpdateTravelLog(id, fields));
         } catch (Exception e){
             return ResponseEntity.notFound().build();
         }

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
+
 @Entity
 @Table(name = "visas")
 @Getter
@@ -17,8 +19,12 @@ public class Visa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer visaId;
 
-    @Column(nullable = false)
-    private Integer touristId;
+    @ManyToOne
+    @JoinColumn(name = "tourist_id", nullable = false)
+    private Tourist tourist;
+
+    @OneToMany(mappedBy = "visa", cascade = CascadeType.ALL)
+    private List<VisaExtension> visaExtensions;
 
     @Column(nullable = false)
     private String visaType;

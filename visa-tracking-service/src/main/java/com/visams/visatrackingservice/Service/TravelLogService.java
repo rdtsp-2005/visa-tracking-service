@@ -5,7 +5,9 @@ import com.visams.visatrackingservice.Repository.TravelLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class TravelLogService {
@@ -29,10 +31,28 @@ public class TravelLogService {
         TravelLog existing = travelLogRepository.findById(id).orElseThrow(() -> new RuntimeException("Travel Log Not Found"+id));
 
         existing.setLogId(updated.getLogId());
-        existing.setTouristId(updated.getTouristId());
+        existing.setTourist(updated.getTourist());
         existing.setLocation(updated.getLocation());
         existing.setCheckInDate(updated.getCheckInDate());
         existing.setCheckOutDate(updated.getCheckOutDate());
+
+        return travelLogRepository.save(existing);
+    }
+
+    public TravelLog partialUpdateTravelLog(Integer id, Map<String, Object> fields){
+        TravelLog existing = travelLogRepository.findById(id).orElseThrow(() -> new RuntimeException("Travel Log Not Found"+id));
+
+        if(fields.containsKey("location")){
+            existing.setLocation((String) fields.get("location"));
+        }
+
+        if(fields.containsKey("checkInDate")){
+            existing.setCheckInDate((LocalDate)  fields.get("checkInDate"));
+        }
+
+        if(fields.containsKey("checkOutDate")){
+            existing.setCheckOutDate((LocalDate)  fields.get("checkOutDate"));
+        }
 
         return travelLogRepository.save(existing);
     }

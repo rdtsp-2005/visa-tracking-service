@@ -8,6 +8,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/visaextensions")
 public class VisaExtensionController {
@@ -39,6 +41,15 @@ public class VisaExtensionController {
         try{
             return ResponseEntity.ok(visaExtensionService.updateVisaExtension(id, visaExtension));
         } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PatchMapping("/partialupdate/{id}")
+    public ResponseEntity<VisaExtension> partialUpdateVisaExtension(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
+        try{
+            return ResponseEntity.ok(visaExtensionService.partialUpdateVisaExtension(id, fields));
+        }catch (RuntimeException e){
             return ResponseEntity.notFound().build();
         }
     }

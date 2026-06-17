@@ -18,8 +18,9 @@ public class VisaExtension {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer extensionId;
 
-    @Column(nullable = false)
-    private Integer visaId;
+    @ManyToOne
+    @JoinColumn(name = "visa_id", nullable = false)
+    private Visa visa;
 
     @Column(nullable = false)
     private LocalDate extendedDate;

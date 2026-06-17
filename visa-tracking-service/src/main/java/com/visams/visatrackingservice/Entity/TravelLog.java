@@ -18,8 +18,9 @@ public class TravelLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer logId;
 
-    @Column(nullable = false)
-    private Integer touristId;
+    @ManyToOne
+    @JoinColumn(name = "tourist_id", nullable = false)
+    private Tourist tourist;
 
     @Column(nullable = false)
     private String location;

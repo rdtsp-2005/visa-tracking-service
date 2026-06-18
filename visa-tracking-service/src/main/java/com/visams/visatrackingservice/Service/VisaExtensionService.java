@@ -3,6 +3,10 @@ package com.visams.visatrackingservice.Service;
 import com.visams.visatrackingservice.Entity.VisaExtension;
 import com.visams.visatrackingservice.Repository.VisaExtensionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -56,5 +60,20 @@ public class VisaExtensionService {
 
     public void deleteVisaExtension(Integer id){
         visaExtensionRepository.deleteById(id);
+    }
+
+    public Page<VisaExtension> getPageableAllVisaExtensions(int page, int size,String sortBy){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return visaExtensionRepository.findAll(pageable);
+    }
+
+    public Page<VisaExtension> searchByExtensionId(Integer extensionId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return visaExtensionRepository.findByExtensionId(extensionId, pageable);
+    }
+
+    public Page<VisaExtension> searchByVisaId(Integer visaId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return visaExtensionRepository.findByVisa_visaId(visaId, pageable);
     }
 }

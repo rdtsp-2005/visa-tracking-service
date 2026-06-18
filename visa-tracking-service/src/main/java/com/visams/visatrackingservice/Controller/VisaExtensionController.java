@@ -3,6 +3,7 @@ package com.visams.visatrackingservice.Controller;
 import com.visams.visatrackingservice.Entity.VisaExtension;
 import com.visams.visatrackingservice.Service.VisaExtensionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,4 +60,30 @@ public class VisaExtensionController {
         visaExtensionService.deleteVisaExtension(id);
         return ResponseEntity.noContent().build();
     }
+
+    //pageable and sorting
+    @GetMapping
+    public ResponseEntity<Page<VisaExtension>> getPageableAllVisaExtension(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "extensionid") String sortBy){
+        return ResponseEntity.ok(visaExtensionService.getPageableAllVisaExtensions(page,size,sortBy));
+    }
+
+    @GetMapping("/search/extension")
+    public ResponseEntity<Page<VisaExtension>> searchByVisaExtensionId(
+            @RequestParam Integer extensionId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(visaExtensionService.searchByExtensionId(extensionId, page, size));
+    }
+
+    @GetMapping("/search/visa")
+    public ResponseEntity<Page<VisaExtension>> searchByVisaId(
+            @RequestParam Integer visaId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(visaExtensionService.searchByVisaId(visaId, page, size));
+    }
+
 }

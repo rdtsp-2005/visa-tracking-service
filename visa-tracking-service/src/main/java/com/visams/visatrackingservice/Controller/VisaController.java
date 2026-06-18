@@ -3,6 +3,7 @@ package com.visams.visatrackingservice.Controller;
 import com.visams.visatrackingservice.Entity.Visa;
 import com.visams.visatrackingservice.Service.VisaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,4 +61,37 @@ public class VisaController {
         visaService.deleteVisa(id);
         return ResponseEntity.noContent().build();
     }
+
+    //pagination and sorting
+    @GetMapping
+    public ResponseEntity<Page<Visa>> getPageableAllVisas(@RequestParam(defaultValue = "0") int page,
+                                                          @RequestParam(defaultValue = "10") int size,
+                                                          @RequestParam(defaultValue = "visaid") String sortBy){
+        return ResponseEntity.ok(visaService.getPageableAllVisas(page,size,sortBy));
+    }
+
+    //filtering
+    @GetMapping("/search")
+    public ResponseEntity<Page<Visa>> searchByVisaId(@RequestParam Integer visaId,
+                                                 @RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "10") int size, @PathVariable String id){
+        return ResponseEntity.ok(visaService.searchByVisaId(visaId,page,size));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<Visa>> searchByTouristId(
+            @RequestParam Integer touristId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(visaService.searchByTouristId(touristId, page, size));
+    }
+
+    @GetMapping("/search/type")
+    public ResponseEntity<Page<Visa>> searchByVisaType(
+            @RequestParam String visaType,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(visaService.searchByVisaType(visaType, page, size));
+    }
+
 }

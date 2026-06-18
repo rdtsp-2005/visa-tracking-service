@@ -6,7 +6,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "visa_history")
+@Table(name = "visa_histories")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -17,11 +17,13 @@ public class VisaHistory {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer historyId;
 
-    @Column(nullable = false)
-    private Integer visaId;
+    @ManyToOne
+    @JoinColumn(name = "visa_id", nullable = false)
+    private Visa visa;
 
-    @Column(nullable = false)
-    private Integer touristId;
+    @ManyToOne
+    @JoinColumn(name = "tourist_id", nullable = false)
+    private Tourist tourist;
 
     @Column(nullable = false)
     private String action;

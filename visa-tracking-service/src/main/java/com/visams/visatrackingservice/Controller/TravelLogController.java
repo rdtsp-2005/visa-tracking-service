@@ -3,6 +3,7 @@ package com.visams.visatrackingservice.Controller;
 import com.visams.visatrackingservice.Entity.TravelLog;
 import com.visams.visatrackingservice.Service.TravelLogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,6 +60,40 @@ public class TravelLogController {
     public ResponseEntity<TravelLog> deleteTravelLog(@PathVariable Integer id){
         travelLogService.deleteTravelLog(id);
         return ResponseEntity.noContent().build();
+    }
+
+    //pagination and sorting
+    @GetMapping
+    public ResponseEntity<Page<TravelLog>> getPageableAllTravelLogs(
+            @RequestParam(defaultValue = "0")int page,
+            @RequestParam(defaultValue = "10")int size,
+            @RequestParam(defaultValue = "logid") String sortBy){
+        return ResponseEntity.ok(travelLogService.getPageableAllTravelLogs(page, size, sortBy));
+    }
+
+    //filtering
+    @GetMapping("/search/log")
+    public ResponseEntity<Page<TravelLog>> searchByLogId(
+            @RequestParam Integer logId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(travelLogService.searchByLogId(logId, page, size));
+    }
+
+    @GetMapping("/search/tourist")
+    public ResponseEntity<Page<TravelLog>> searchByTouristId(
+            @RequestParam Integer touristId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(travelLogService.searchByTouristId(touristId, page, size));
+    }
+
+    @GetMapping("/search/location")
+    public ResponseEntity<Page<TravelLog>> searchByLocation(
+            @RequestParam String location,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(travelLogService.searchByLocation(location, page, size));
     }
 
 }

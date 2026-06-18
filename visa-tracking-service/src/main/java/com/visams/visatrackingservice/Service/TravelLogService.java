@@ -3,6 +3,10 @@ package com.visams.visatrackingservice.Service;
 import com.visams.visatrackingservice.Entity.TravelLog;
 import com.visams.visatrackingservice.Repository.TravelLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -59,5 +63,27 @@ public class TravelLogService {
 
     public void deleteTravelLog(Integer id){
         travelLogRepository.deleteById(id);
+    }
+
+    //pagination and sorting
+    public Page<TravelLog> getPageableAllTravelLogs(int page, int size,String sortBy){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return travelLogRepository.findAll(pageable);
+    }
+
+    //filtering
+    public Page<TravelLog> searchByLogId(Integer logId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return travelLogRepository.findByLogId(logId, pageable);
+    }
+
+    public Page<TravelLog> searchByTouristId(Integer touristId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return travelLogRepository.findByTourist_touristId(touristId, pageable);
+    }
+
+    public Page<TravelLog> searchByLocation(String location, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return travelLogRepository.findByLocationContainingIgnoreCase(location, pageable);
     }
 }

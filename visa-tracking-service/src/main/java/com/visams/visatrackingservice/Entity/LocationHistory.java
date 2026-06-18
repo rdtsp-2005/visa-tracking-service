@@ -6,19 +6,21 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "location_history")
+@Table(name = "location_histories")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class LocationHistory {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer locationId;
 
-    @Column(nullable = false)
-    private Integer touristId;
+    @ManyToOne
+    @JoinColumn(name = "tourist_id", nullable = false)
+    private Tourist tourist;
 
     @Column(nullable = false)
     private String locationName;

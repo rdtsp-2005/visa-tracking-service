@@ -19,6 +19,9 @@ public class Visa {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer visaId;
 
+    @OneToMany(mappedBy = "visa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<VisaHistory> visaHistories;
+
     @ManyToOne
     @JoinColumn(name = "tourist_id", nullable = false)
     private Tourist tourist;

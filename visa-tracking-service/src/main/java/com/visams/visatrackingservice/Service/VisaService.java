@@ -3,6 +3,10 @@ package com.visams.visatrackingservice.Service;
 import com.visams.visatrackingservice.Entity.Visa;
 import com.visams.visatrackingservice.Repository.VisaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -69,4 +73,25 @@ public class VisaService {
         visaRepository.deleteById(id);
     }
 
+    //pagination and sorting
+    public Page<Visa> getPageableAllVisas(int page,int size,String sortBy){
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return visaRepository.findAll(pageable);
+    }
+
+    //filtering
+    public Page<Visa> searchByVisaId(Integer visaId,int page,int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return visaRepository.findByVisaId(visaId,pageable);
+    }
+
+    public Page<Visa> searchByTouristId(Integer touristId,int page,int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return visaRepository.findByTourist_touristId(touristId,pageable);
+    }
+
+    public Page<Visa> searchByVisaType(String visaType,int page,int size){
+        Pageable pageable = PageRequest.of(page, size);
+        return visaRepository.findByVisaTypeContainingIgnoreCase(visaType,pageable);
+    }
 }

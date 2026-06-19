@@ -5,9 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface TravelLogRepository extends JpaRepository<TravelLog,Integer> {
+public interface TravelLogRepository extends JpaRepository<TravelLog, Integer> {
 
     Page<TravelLog> findByLogId(Integer logId, Pageable pageable);
-    Page<TravelLog> findByTourist_touristId(Long touristId, Pageable pageable);
+
+    Page<TravelLog> findByTouristId(Long touristId, Pageable pageable);
+
     Page<TravelLog> findByLocationContainingIgnoreCase(String location, Pageable pageable);
 }

@@ -21,9 +21,8 @@ public class VisaHistory {
     @JoinColumn(name = "visa_id", nullable = false)
     private Visa visa;
 
-    @ManyToOne
-    @JoinColumn(name = "tourist_id", nullable = false)
-    private Tourist tourist;
+    @Column(name = "tourist_id", nullable = false)
+    private Long touristId;
 
     @Column(nullable = false)
     private String action;
@@ -32,5 +31,4 @@ public class VisaHistory {
 
     @Column(nullable = false)
     private LocalDateTime actionDate;
-
 }

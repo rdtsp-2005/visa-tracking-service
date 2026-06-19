@@ -2,7 +2,6 @@ package com.visams.visatrackingservice.Service;
 
 import com.visams.visatrackingservice.Dto.LocationHistoryDto;
 import com.visams.visatrackingservice.Entity.LocationHistory;
-import com.visams.visatrackingservice.Entity.Tourist;
 import com.visams.visatrackingservice.Repository.LocationHistoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,7 +24,7 @@ public class LocationHistoryService {
     private LocationHistoryDto toDto(LocationHistory locationHistory){
         return new LocationHistoryDto(
                 locationHistory.getLocationId(),
-                locationHistory.getTourist().getTouristId(),
+                locationHistory.getTouristId(),
                 locationHistory.getLocationName(),
                 locationHistory.getLocationType(),
                 locationHistory.getRecordedAt());
@@ -49,15 +48,10 @@ public class LocationHistoryService {
     // create
     public LocationHistoryDto createLocationHistory(LocationHistoryDto dto){
         LocationHistory locationHistory = new LocationHistory();
-
-        Tourist tourist = new Tourist();
-        tourist.setTouristId(dto.getTouristId());
-        locationHistory.setTourist(tourist);
-
+        locationHistory.setTouristId(dto.getTouristId());
         locationHistory.setLocationName(dto.getLocationName());
         locationHistory.setLocationType(dto.getLocationType());
         locationHistory.setRecordedAt(dto.getRecordedAt());
-
         return toDto(locationHistoryRepository.save(locationHistory));
     }
 
@@ -66,11 +60,8 @@ public class LocationHistoryService {
         LocationHistory existing = locationHistoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Location History Not Found"+id));
 
-        Tourist tourist = new Tourist();
-        tourist.setTouristId(updated.getTouristId());
-        existing.setTourist(tourist);
-
         existing.setLocationId(updated.getLocationId());
+        existing.setTouristId(updated.getTouristId());
         existing.setLocationName(updated.getLocationName());
         existing.setLocationType(updated.getLocationType());
         existing.setRecordedAt(updated.getRecordedAt());
@@ -84,9 +75,7 @@ public class LocationHistoryService {
                 .orElseThrow(() -> new RuntimeException("Location History Not Found"+id));
 
         if(fields.containsKey("touristId")){
-            Tourist tourist = new Tourist();
-            tourist.setTouristId(Long.valueOf(fields.get("touristId").toString()));
-            existing.setTourist(tourist);
+            existing.setTouristId(Long.valueOf(fields.get("touristId").toString()));
         }
         if(fields.containsKey("locationName")){
             existing.setLocationName((String) fields.get("locationName"));
@@ -120,7 +109,7 @@ public class LocationHistoryService {
 
     public Page<LocationHistoryDto> searchByTouristId(Long touristId, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
-        return locationHistoryRepository.findByTourist_touristId(touristId, pageable).map(this::toDto);
+        return locationHistoryRepository.findByTouristId(touristId, pageable).map(this::toDto);
     }
 
     public Page<LocationHistoryDto> searchByLocationName(String locationName, int page, int size){

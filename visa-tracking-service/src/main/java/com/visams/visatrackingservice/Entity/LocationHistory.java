@@ -13,14 +13,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class LocationHistory {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer locationId;
 
-    @ManyToOne
-    @JoinColumn(name = "tourist_id", nullable = false)
-    private Tourist tourist;
+    @Column(name = "tourist_id", nullable = false)
+    private Long touristId;
 
     @Column(nullable = false)
     private String locationName;

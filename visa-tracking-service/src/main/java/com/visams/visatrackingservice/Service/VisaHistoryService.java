@@ -1,7 +1,6 @@
 package com.visams.visatrackingservice.Service;
 
 import com.visams.visatrackingservice.Dto.VisaHistoryDto;
-import com.visams.visatrackingservice.Entity.Tourist;
 import com.visams.visatrackingservice.Entity.Visa;
 import com.visams.visatrackingservice.Entity.VisaHistory;
 import com.visams.visatrackingservice.Repository.VisaHistoryRepository;
@@ -27,7 +26,7 @@ public class VisaHistoryService {
         return new VisaHistoryDto(
                 visaHistory.getHistoryId(),
                 visaHistory.getVisa().getVisaId(),
-                visaHistory.getTourist().getTouristId(),
+                visaHistory.getTouristId(),
                 visaHistory.getAction(),
                 visaHistory.getRemarks(),
                 visaHistory.getActionDate());
@@ -56,10 +55,7 @@ public class VisaHistoryService {
         visa.setVisaId(dto.getVisaId());
         visaHistory.setVisa(visa);
 
-        Tourist tourist = new Tourist();
-        tourist.setTouristId(dto.getTouristId());
-        visaHistory.setTourist(tourist);
-
+        visaHistory.setTouristId(dto.getTouristId());
         visaHistory.setHistoryId(dto.getHistoryId());
         visaHistory.setAction(dto.getAction());
         visaHistory.setRemarks(dto.getRemarks());
@@ -77,11 +73,8 @@ public class VisaHistoryService {
         visa.setVisaId(updated.getVisaId());
         existing.setVisa(visa);
 
-        Tourist tourist = new Tourist();
-        tourist.setTouristId(updated.getTouristId());
-        existing.setTourist(tourist);
-
         existing.setHistoryId(updated.getHistoryId());
+        existing.setTouristId(updated.getTouristId());
         existing.setAction(updated.getAction());
         existing.setRemarks(updated.getRemarks());
         existing.setActionDate(updated.getActionDate());
@@ -100,9 +93,7 @@ public class VisaHistoryService {
             existing.setVisa(visa);
         }
         if(fields.containsKey("touristId")){
-            Tourist tourist = new Tourist();
-            tourist.setTouristId(Long.valueOf(fields.get("touristId").toString()));
-            existing.setTourist(tourist);
+            existing.setTouristId(Long.valueOf(fields.get("touristId").toString()));
         }
         if(fields.containsKey("action")){
             existing.setAction((String) fields.get("action"));
@@ -141,6 +132,6 @@ public class VisaHistoryService {
 
     public Page<VisaHistoryDto> searchByTouristId(Long touristId, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
-        return visaHistoryRepository.findByTourist_touristId(touristId, pageable).map(this::toDto);
+        return visaHistoryRepository.findByTouristId(touristId, pageable).map(this::toDto);
     }
 }

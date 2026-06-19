@@ -1,7 +1,6 @@
 package com.visams.visatrackingservice.Service;
 
 import com.visams.visatrackingservice.Dto.VisaDto;
-import com.visams.visatrackingservice.Entity.Tourist;
 import com.visams.visatrackingservice.Entity.Visa;
 import com.visams.visatrackingservice.Repository.VisaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class VisaService {
     private VisaDto toDto(Visa visa){
         return new VisaDto(
                 visa.getVisaId(),
-                visa.getTourist().getTouristId(),
+                visa.getTouristId(),
                 visa.getVisaType(),
                 visa.getIssueDate(),
                 visa.getExpiryDate(),
@@ -44,36 +43,28 @@ public class VisaService {
     // view by id
     public VisaDto getVisaById(Integer visaId){
         Visa visa = visaRepository.findById(visaId)
-                .orElseThrow(() -> new RuntimeException("Visa Not Found" + visaId));
+                .orElseThrow(() -> new RuntimeException("Visa Not Found"+visaId));
         return toDto(visa);
     }
 
-    // create new one
+    // create
     public VisaDto createVisa(VisaDto dto){
         Visa visa = new Visa();
-
-        Tourist tourist = new Tourist();
-        tourist.setTouristId(dto.getTouristId());
-        visa.setTourist(tourist);
-
+        visa.setTouristId(dto.getTouristId());
         visa.setVisaType(dto.getVisaType());
         visa.setIssueDate(dto.getIssueDate());
         visa.setExpiryDate(dto.getExpiryDate());
         visa.setStatus(dto.getStatus());
-
         return toDto(visaRepository.save(visa));
     }
 
     // update
     public VisaDto updateVisa(Integer id, VisaDto updated){
         Visa existing = visaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Visa Not Found" + id));
-
-        Tourist tourist = new Tourist();
-        tourist.setTouristId(updated.getTouristId());
-        existing.setTourist(tourist);
+                .orElseThrow(() -> new RuntimeException("Visa Not Found"+id));
 
         existing.setVisaId(updated.getVisaId());
+        existing.setTouristId(updated.getTouristId());
         existing.setVisaType(updated.getVisaType());
         existing.setIssueDate(updated.getIssueDate());
         existing.setExpiryDate(updated.getExpiryDate());
@@ -85,12 +76,10 @@ public class VisaService {
     // partially update
     public VisaDto partialUpdateVisa(Integer id, Map<String, Object> fields){
         Visa existing = visaRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Visa not found:" + id));
+                .orElseThrow(() -> new RuntimeException("Visa not found:"+id));
 
         if(fields.containsKey("touristId")){
-            Tourist tourist = new Tourist();
-            tourist.setTouristId(Long.valueOf(fields.get("touristId").toString()));
-            existing.setTourist(tourist);
+            existing.setTouristId(Long.valueOf(fields.get("touristId").toString()));
         }
         if(fields.containsKey("visaType")){
             existing.setVisaType((String) fields.get("visaType"));
@@ -127,7 +116,7 @@ public class VisaService {
 
     public Page<VisaDto> searchByTouristId(Long touristId, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
-        return visaRepository.findByTourist_touristId(touristId, pageable).map(this::toDto);
+        return visaRepository.findByTouristId(touristId, pageable).map(this::toDto);
     }
 
     public Page<VisaDto> searchByVisaType(String visaType, int page, int size){

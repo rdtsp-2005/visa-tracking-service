@@ -12,7 +12,6 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-
 public class Visa {
 
     @Id
@@ -22,9 +21,8 @@ public class Visa {
     @OneToMany(mappedBy = "visa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<VisaHistory> visaHistories;
 
-    @ManyToOne
-    @JoinColumn(name = "tourist_id", nullable = false)
-    private Tourist tourist;
+    @Column(name = "tourist_id", nullable = false)
+    private Long touristId;
 
     @OneToMany(mappedBy = "visa", cascade = CascadeType.ALL)
     private List<VisaExtension> visaExtensions;

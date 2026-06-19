@@ -11,6 +11,5 @@ public interface VisaHistoryRepository extends JpaRepository<VisaHistory, Intege
 
     Page<VisaHistory> findByVisa_visaId(Integer visaId, Pageable pageable);
 
-    Page<VisaHistory> findByTourist_touristId(Long touristId, Pageable pageable);
-
+    Page<VisaHistory> findByTouristId(Long touristId, Pageable pageable);
 }

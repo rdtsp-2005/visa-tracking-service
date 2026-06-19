@@ -18,14 +18,14 @@ public class TravelLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer logId;
 
-    @ManyToOne
-    @JoinColumn(name = "tourist_id", nullable = false)
-    private Tourist tourist;
+    @Column(name = "tourist_id", nullable = false)
+    private Long touristId;
 
     @Column(nullable = false)
     private String location;
 
     @Column(nullable = false)
     private LocalDate checkInDate;
+
     private LocalDate checkOutDate;
 }

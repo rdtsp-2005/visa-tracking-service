@@ -1,7 +1,6 @@
 package com.visams.visatrackingservice.Service;
 
 import com.visams.visatrackingservice.Dto.TravelLogDto;
-import com.visams.visatrackingservice.Entity.Tourist;
 import com.visams.visatrackingservice.Entity.TravelLog;
 import com.visams.visatrackingservice.Repository.TravelLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +25,13 @@ public class TravelLogService {
     private TravelLogDto toDto(TravelLog travelLog){
         return new TravelLogDto(
                 travelLog.getLogId(),
-                travelLog.getTourist().getTouristId(),
+                travelLog.getTouristId(),
                 travelLog.getLocation(),
                 travelLog.getCheckInDate(),
                 travelLog.getCheckOutDate());
     }
 
-    //view all
+    // view all
     public List<TravelLogDto> getAllTravelLogs(){
         return travelLogRepository.findAll()
                 .stream()
@@ -40,37 +39,30 @@ public class TravelLogService {
                 .collect(Collectors.toList());
     }
 
-    //view by id
+    // view by id
     public TravelLogDto getTravelLogById(Integer id){
         TravelLog travelLog = travelLogRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Travel Log Not Found"+id));
         return toDto(travelLog);
     }
 
-    //create
+    // create
     public TravelLogDto createTravelLog(TravelLogDto dto){
         TravelLog travelLog = new TravelLog();
-
-        Tourist tourist = new Tourist();
-        tourist.setTouristId(dto.getTouristId());
-        travelLog.setTourist(tourist);
-
+        travelLog.setTouristId(dto.getTouristId());
         travelLog.setLocation(dto.getLocation());
         travelLog.setCheckInDate(dto.getCheckInDate());
         travelLog.setCheckOutDate(dto.getCheckOutDate());
         return toDto(travelLogRepository.save(travelLog));
     }
 
-    //update
+    // update
     public TravelLogDto updateTravelLog(Integer id, TravelLogDto updated){
         TravelLog existing = travelLogRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Travel Log Not Found"+id));
 
-        Tourist tourist = new Tourist();
-        tourist.setTouristId(updated.getTouristId());
-        existing.setTourist(tourist);
-
         existing.setLogId(updated.getLogId());
+        existing.setTouristId(updated.getTouristId());
         existing.setLocation(updated.getLocation());
         existing.setCheckInDate(updated.getCheckInDate());
         existing.setCheckOutDate(updated.getCheckOutDate());
@@ -84,9 +76,7 @@ public class TravelLogService {
                 .orElseThrow(() -> new RuntimeException("Travel Log Not Found"+id));
 
         if(fields.containsKey("touristId")){
-            Tourist tourist = new Tourist();
-            tourist.setTouristId(Long.valueOf(fields.get("touristId").toString()));
-            existing.setTourist(tourist);
+            existing.setTouristId(Long.valueOf(fields.get("touristId").toString()));
         }
         if(fields.containsKey("location")){
             existing.setLocation((String) fields.get("location"));
@@ -101,29 +91,29 @@ public class TravelLogService {
         return toDto(travelLogRepository.save(existing));
     }
 
-    //delete
+    // delete
     public void deleteTravelLog(Integer id){
         travelLogRepository.deleteById(id);
     }
 
-    //pagination and sorting
+    // pagination and sorting
     public Page<TravelLogDto> getPageableAllTravelLogs(int page, int size, String sortBy){
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return travelLogRepository.findAll(pageable).map(this::toDto);
     }
 
-    //filtering
-    public Page<TravelLogDto> searchByLogId(Integer logId, int page, int size) {
+    // filtering
+    public Page<TravelLogDto> searchByLogId(Integer logId, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         return travelLogRepository.findByLogId(logId, pageable).map(this::toDto);
     }
 
-    public Page<TravelLogDto> searchByTouristId(Long touristId, int page, int size) {
+    public Page<TravelLogDto> searchByTouristId(Long touristId, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
-        return travelLogRepository.findByTourist_touristId(touristId, pageable).map(this::toDto);
+        return travelLogRepository.findByTouristId(touristId, pageable).map(this::toDto);
     }
 
-    public Page<TravelLogDto> searchByLocation(String location, int page, int size) {
+    public Page<TravelLogDto> searchByLocation(String location, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
         return travelLogRepository.findByLocationContainingIgnoreCase(location, pageable).map(this::toDto);
     }

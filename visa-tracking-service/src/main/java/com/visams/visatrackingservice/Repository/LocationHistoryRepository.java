@@ -9,7 +9,7 @@ public interface LocationHistoryRepository extends JpaRepository<LocationHistory
 
     Page<LocationHistory> findByLocationId(Integer locationId, Pageable pageable);
 
-    Page<LocationHistory> findByTourist_touristId(Long touristId, Pageable pageable);
+    Page<LocationHistory> findByTouristId(Long touristId, Pageable pageable);
 
     Page<LocationHistory> findByLocationNameContainingIgnoreCase(String locationName, Pageable pageable);
 

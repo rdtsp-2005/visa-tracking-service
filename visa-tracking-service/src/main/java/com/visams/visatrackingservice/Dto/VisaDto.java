@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Data
 @NoArgsConstructor
@@ -13,10 +12,10 @@ import java.time.LocalTime;
 public class VisaDto {
 
     private Integer visaId;
-    private Integer touristId;
+    private Long touristId;
     private String visaType;
     private LocalDate issueDate;
-    private LocalTime expiryData;
+    private LocalDate expiryDate;
     private String status;
 
 }

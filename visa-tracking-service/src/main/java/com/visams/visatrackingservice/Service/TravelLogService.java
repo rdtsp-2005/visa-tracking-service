@@ -1,5 +1,6 @@
 package com.visams.visatrackingservice.Service;
 
+import com.visams.visatrackingservice.Dto.TravelLogDto;
 import com.visams.visatrackingservice.Entity.TravelLog;
 import com.visams.visatrackingservice.Repository.TravelLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
 
 @Service
 public class TravelLogService {
@@ -19,71 +22,96 @@ public class TravelLogService {
     @Autowired
     private TravelLogRepository travelLogRepository;
 
-    public List<TravelLog> getAllTravelLogs(){
-        return travelLogRepository.findAll();
+    private TravelLogDto toDto(TravelLog travelLog){
+        return new TravelLogDto(
+                travelLog.getLogId(),
+                travelLog.getTourist().getTouristId(),
+                travelLog.getLocation(),
+                travelLog.getCheckInDate(),
+                travelLog.getCheckOutDate());
     }
 
-    public TravelLog getTravelLogById(Integer id){
-        return travelLogRepository.findById(id).orElseThrow(() -> new RuntimeException("Travel Log Not Found"+id));
+    //view all
+    public List<TravelLogDto> getAllTravelLogs(){
+        return travelLogRepository.findAll()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
-    public TravelLog createTravelLog(TravelLog travelLog){
-        return travelLogRepository.save(travelLog);
+    //view by id
+    public TravelLogDto getTravelLogById(Integer id){
+        TravelLog travelLog = travelLogRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Travel Log Not Found"+id));
+        return toDto(travelLog);
     }
 
-    public TravelLog updateTravelLog(Integer id , TravelLog updated){
-        TravelLog existing = travelLogRepository.findById(id).orElseThrow(() -> new RuntimeException("Travel Log Not Found"+id));
+    //create
+    public TravelLogDto createTravelLog(TravelLogDto dto){
+        TravelLog travelLog = new TravelLog();
+        travelLog.setLocation(dto.getLocation());
+        travelLog.setCheckInDate(dto.getCheckInDate());
+        travelLog.setCheckOutDate(dto.getCheckOutDate());
+        return toDto(travelLogRepository.save(travelLog));
+    }
+
+    //update
+    public TravelLogDto updateTravelLog(Integer id, TravelLogDto updated){
+        TravelLog existing = travelLogRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Travel Log Not Found"+id));
 
         existing.setLogId(updated.getLogId());
-        existing.setTourist(updated.getTourist());
         existing.setLocation(updated.getLocation());
         existing.setCheckInDate(updated.getCheckInDate());
         existing.setCheckOutDate(updated.getCheckOutDate());
 
-        return travelLogRepository.save(existing);
+        return toDto(travelLogRepository.save(existing));
     }
 
-    public TravelLog partialUpdateTravelLog(Integer id, Map<String, Object> fields){
-        TravelLog existing = travelLogRepository.findById(id).orElseThrow(() -> new RuntimeException("Travel Log Not Found"+id));
+    // partially update
+    public TravelLogDto partialUpdateTravelLog(Integer id, Map<String, Object> fields){
+        TravelLog existing = travelLogRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Travel Log Not Found"+id));
 
         if(fields.containsKey("location")){
             existing.setLocation((String) fields.get("location"));
         }
 
         if(fields.containsKey("checkInDate")){
-            existing.setCheckInDate((LocalDate)  fields.get("checkInDate"));
+            existing.setCheckInDate((LocalDate) fields.get("checkInDate"));
         }
 
         if(fields.containsKey("checkOutDate")){
-            existing.setCheckOutDate((LocalDate)  fields.get("checkOutDate"));
+            existing.setCheckOutDate((LocalDate) fields.get("checkOutDate"));
         }
 
-        return travelLogRepository.save(existing);
+        return toDto(travelLogRepository.save(existing));
     }
 
+    //delete
     public void deleteTravelLog(Integer id){
         travelLogRepository.deleteById(id);
     }
 
     //pagination and sorting
-    public Page<TravelLog> getPageableAllTravelLogs(int page, int size,String sortBy){
+    public Page<TravelLogDto> getPageableAllTravelLogs(int page, int size, String sortBy){
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return travelLogRepository.findAll(pageable);
+        return travelLogRepository.findAll(pageable).map(this::toDto);
     }
 
     //filtering
-    public Page<TravelLog> searchByLogId(Integer logId, int page, int size) {
+    public Page<TravelLogDto> searchByLogId(Integer logId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return travelLogRepository.findByLogId(logId, pageable);
+        return travelLogRepository.findByLogId(logId, pageable).map(this::toDto);
     }
 
-    public Page<TravelLog> searchByTouristId(Integer touristId, int page, int size) {
+    public Page<TravelLogDto> searchByTouristId(Long touristId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return travelLogRepository.findByTourist_touristId(touristId, pageable);
+        return travelLogRepository.findByTourist_touristId(touristId, pageable).map(this::toDto);
     }
 
-    public Page<TravelLog> searchByLocation(String location, int page, int size) {
+    public Page<TravelLogDto> searchByLocation(String location, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return travelLogRepository.findByLocationContainingIgnoreCase(location, pageable);
+        return travelLogRepository.findByLocationContainingIgnoreCase(location, pageable).map(this::toDto);
     }
 }

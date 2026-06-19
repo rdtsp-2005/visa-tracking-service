@@ -1,6 +1,6 @@
 package com.visams.visatrackingservice.Controller;
 
-import com.visams.visatrackingservice.Entity.VisaExtension;
+import com.visams.visatrackingservice.Dto.VisaExtensionDto;
 import com.visams.visatrackingservice.Service.VisaExtensionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -16,15 +16,17 @@ import java.util.Map;
 public class VisaExtensionController {
 
     @Autowired
-    private VisaExtensionService  visaExtensionService;
+    private VisaExtensionService visaExtensionService;
 
+    //view all
     @GetMapping
-    public ResponseEntity<List<VisaExtension>> getAllVisaExtensions() {
+    public ResponseEntity<List<VisaExtensionDto>> getAllVisaExtensions() {
         return ResponseEntity.ok(visaExtensionService.getAllVisaExtensions());
     }
 
+    //view by id
     @GetMapping("/view/{id}")
-    public ResponseEntity<VisaExtension> getVisaExtensionById(@PathVariable Integer id){
+    public ResponseEntity<VisaExtensionDto> getVisaExtensionById(@PathVariable Integer id){
         try{
             return ResponseEntity.ok(visaExtensionService.getVisaExtensionById(id));
         }catch (Exception e){
@@ -32,22 +34,25 @@ public class VisaExtensionController {
         }
     }
 
+    // create new record
     @PostMapping
-    public ResponseEntity<VisaExtension> createVisaExtension(@RequestBody VisaExtension visaExtension){
-        return ResponseEntity.status(HttpStatus.CREATED).body(visaExtensionService.createVisaExtension(visaExtension));
+    public ResponseEntity<VisaExtensionDto> createVisaExtension(@RequestBody VisaExtensionDto visaExtensionDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(visaExtensionService.createVisaExtension(visaExtensionDto));
     }
 
+    // update
     @PutMapping("/update/{id}")
-    public ResponseEntity<VisaExtension> updateVisaExtension(@PathVariable Integer id, @RequestBody VisaExtension visaExtension){
+    public ResponseEntity<VisaExtensionDto> updateVisaExtension(@PathVariable Integer id, @RequestBody VisaExtensionDto visaExtensionDto){
         try{
-            return ResponseEntity.ok(visaExtensionService.updateVisaExtension(id, visaExtension));
+            return ResponseEntity.ok(visaExtensionService.updateVisaExtension(id, visaExtensionDto));
         } catch (Exception e){
             return ResponseEntity.notFound().build();
         }
     }
 
+    // partially update
     @PatchMapping("/partialupdate/{id}")
-    public ResponseEntity<VisaExtension> partialUpdateVisaExtension(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
+    public ResponseEntity<VisaExtensionDto> partialUpdateVisaExtension(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
         try{
             return ResponseEntity.ok(visaExtensionService.partialUpdateVisaExtension(id, fields));
         }catch (RuntimeException e){
@@ -55,23 +60,25 @@ public class VisaExtensionController {
         }
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<VisaExtension> deleteVisaExtension(@PathVariable Integer id){
+    // delete
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteVisaExtension(@PathVariable Integer id){
         visaExtensionService.deleteVisaExtension(id);
         return ResponseEntity.noContent().build();
     }
 
     //pageable and sorting
-    @GetMapping
-    public ResponseEntity<Page<VisaExtension>> getPageableAllVisaExtension(
+    @GetMapping("/all")
+    public ResponseEntity<Page<VisaExtensionDto>> getPageableAllVisaExtension(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "extensionid") String sortBy){
+            @RequestParam(defaultValue = "extensionId") String sortBy){
         return ResponseEntity.ok(visaExtensionService.getPageableAllVisaExtensions(page,size,sortBy));
     }
 
+    //filtering
     @GetMapping("/search/extension")
-    public ResponseEntity<Page<VisaExtension>> searchByVisaExtensionId(
+    public ResponseEntity<Page<VisaExtensionDto>> searchByVisaExtensionId(
             @RequestParam Integer extensionId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -79,7 +86,7 @@ public class VisaExtensionController {
     }
 
     @GetMapping("/search/visa")
-    public ResponseEntity<Page<VisaExtension>> searchByVisaId(
+    public ResponseEntity<Page<VisaExtensionDto>> searchByVisaId(
             @RequestParam Integer visaId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {

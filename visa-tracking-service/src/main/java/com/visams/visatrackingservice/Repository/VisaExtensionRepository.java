@@ -1,7 +1,5 @@
 package com.visams.visatrackingservice.Repository;
 
-
-import com.visams.visatrackingservice.Entity.Visa;
 import com.visams.visatrackingservice.Entity.VisaExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

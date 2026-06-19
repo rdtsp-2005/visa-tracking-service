@@ -1,6 +1,6 @@
 package com.visams.visatrackingservice.Controller;
 
-import com.visams.visatrackingservice.Entity.Visa;
+import com.visams.visatrackingservice.Dto.VisaDto;
 import com.visams.visatrackingservice.Service.VisaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,12 +19,12 @@ public class VisaController {
     private VisaService visaService;
 
     @GetMapping
-    public ResponseEntity<List<Visa>> getAllVisas(){
+    public ResponseEntity<List<VisaDto>> getAllVisas(){
         return ResponseEntity.ok(visaService.getAllVisas());
     }
 
     @GetMapping("/view/{id}")
-    public ResponseEntity<Visa> getVisaById(@PathVariable Integer id){
+    public ResponseEntity<VisaDto> getVisaById(@PathVariable Integer id){
         try{
             return ResponseEntity.ok(visaService.getVisaById(id));
         }
@@ -34,12 +34,12 @@ public class VisaController {
     }
 
     @PostMapping
-    public ResponseEntity<Visa> createVisa(@RequestBody Visa visa){
+    public ResponseEntity<VisaDto> createVisa(@RequestBody VisaDto visa){
         return ResponseEntity.status(HttpStatus.CREATED).body(visaService.createVisa(visa));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<Visa> updateVisa(@PathVariable Integer id, @RequestBody Visa visa){
+    public ResponseEntity<VisaDto> updateVisa(@PathVariable Integer id, @RequestBody VisaDto visa){
         try {
             return ResponseEntity.ok(visaService.updateVisa(id, visa));
         } catch (RuntimeException e){
@@ -48,7 +48,7 @@ public class VisaController {
     }
 
     @PatchMapping("/partialupdate/{id}")
-    public ResponseEntity<Visa> partialUpdateVisa(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
+    public ResponseEntity<VisaDto> partialUpdateVisa(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
         try{
             return ResponseEntity.ok(visaService.partialUpdateVisa(id, fields));
         } catch (RuntimeException e){
@@ -56,38 +56,40 @@ public class VisaController {
         }
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<Visa> deleteVisa(@PathVariable Integer id){
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Void> deleteVisa(@PathVariable Integer id){
         visaService.deleteVisa(id);
         return ResponseEntity.noContent().build();
     }
 
-    //pagination and sorting
-    @GetMapping
-    public ResponseEntity<Page<Visa>> getPageableAllVisas(@RequestParam(defaultValue = "0") int page,
-                                                          @RequestParam(defaultValue = "10") int size,
-                                                          @RequestParam(defaultValue = "visaid") String sortBy){
-        return ResponseEntity.ok(visaService.getPageableAllVisas(page,size,sortBy));
+    // pagination and sorting
+    @GetMapping("/all")
+    public ResponseEntity<Page<VisaDto>> getPageableAllVisas(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "visaId") String sortBy){
+        return ResponseEntity.ok(visaService.getPageableAllVisas(page, size, sortBy));
     }
 
-    //filtering
+    // filtering
     @GetMapping("/search")
-    public ResponseEntity<Page<Visa>> searchByVisaId(@RequestParam Integer visaId,
-                                                 @RequestParam(defaultValue = "0") int page,
-                                                 @RequestParam(defaultValue = "10") int size, @PathVariable String id){
-        return ResponseEntity.ok(visaService.searchByVisaId(visaId,page,size));
+    public ResponseEntity<Page<VisaDto>> searchByVisaId(
+            @RequestParam Integer visaId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return ResponseEntity.ok(visaService.searchByVisaId(visaId, page, size));
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<Page<Visa>> searchByTouristId(
-            @RequestParam Integer touristId,
+    @GetMapping("/search/tourist")
+    public ResponseEntity<Page<VisaDto>> searchByTouristId(
+            @RequestParam Long touristId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(visaService.searchByTouristId(touristId, page, size));
     }
 
     @GetMapping("/search/type")
-    public ResponseEntity<Page<Visa>> searchByVisaType(
+    public ResponseEntity<Page<VisaDto>> searchByVisaType(
             @RequestParam String visaType,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {

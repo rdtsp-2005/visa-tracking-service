@@ -1,6 +1,6 @@
 package com.visams.visatrackingservice.Controller;
 
-import com.visams.visatrackingservice.Entity.TravelLog;
+import com.visams.visatrackingservice.Dto.TravelLogDto;
 import com.visams.visatrackingservice.Service.TravelLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,12 +20,12 @@ public class TravelLogController {
     private TravelLogService travelLogService;
 
     @GetMapping
-    public ResponseEntity<List<TravelLog>> getAllTravelLogs(){
+    public ResponseEntity<List<TravelLogDto>> getAllTravelLogs(){
         return ResponseEntity.ok(travelLogService.getAllTravelLogs());
     }
 
     @GetMapping("/view/{id}")
-    public ResponseEntity<TravelLog> getTravelLogById(@PathVariable Integer id){
+    public ResponseEntity<TravelLogDto> getTravelLogById(@PathVariable Integer id){
         try {
             return ResponseEntity.ok(travelLogService.getTravelLogById(id));
         } catch (Exception e){
@@ -34,21 +34,21 @@ public class TravelLogController {
     }
 
     @PostMapping
-    public ResponseEntity<TravelLog> createTravelLog(@RequestBody TravelLog travelLog){
-        return ResponseEntity.status(HttpStatus.CREATED).body(travelLogService.createTravelLog(travelLog));
+    public ResponseEntity<TravelLogDto> createTravelLog(@RequestBody TravelLogDto travelLogDto){
+        return ResponseEntity.status(HttpStatus.CREATED).body(travelLogService.createTravelLog(travelLogDto));
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<TravelLog>  updateTravelLog(@PathVariable Integer id, @RequestBody TravelLog travelLog){
+    public ResponseEntity<TravelLogDto> updateTravelLog(@PathVariable Integer id, @RequestBody TravelLogDto travelLogDto){
         try{
-            return ResponseEntity.ok(travelLogService.updateTravelLog(id, travelLog));
+            return ResponseEntity.ok(travelLogService.updateTravelLog(id, travelLogDto));
         } catch (Exception e){
             return ResponseEntity.notFound().build();
         }
     }
 
     @PatchMapping("/partialupdate/{id}")
-    public ResponseEntity<TravelLog> partialUpdateTravelLog(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
+    public ResponseEntity<TravelLogDto> partialUpdateTravelLog(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
         try{
             return ResponseEntity.ok(travelLogService.partialUpdateTravelLog(id, fields));
         } catch (Exception e){
@@ -57,23 +57,23 @@ public class TravelLogController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<TravelLog> deleteTravelLog(@PathVariable Integer id){
+    public ResponseEntity<Void> deleteTravelLog(@PathVariable Integer id){
         travelLogService.deleteTravelLog(id);
         return ResponseEntity.noContent().build();
     }
 
     //pagination and sorting
-    @GetMapping
-    public ResponseEntity<Page<TravelLog>> getPageableAllTravelLogs(
-            @RequestParam(defaultValue = "0")int page,
-            @RequestParam(defaultValue = "10")int size,
-            @RequestParam(defaultValue = "logid") String sortBy){
+    @GetMapping("/all")
+    public ResponseEntity<Page<TravelLogDto>> getPageableAllTravelLogs(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "logId") String sortBy){
         return ResponseEntity.ok(travelLogService.getPageableAllTravelLogs(page, size, sortBy));
     }
 
     //filtering
     @GetMapping("/search/log")
-    public ResponseEntity<Page<TravelLog>> searchByLogId(
+    public ResponseEntity<Page<TravelLogDto>> searchByLogId(
             @RequestParam Integer logId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
@@ -81,15 +81,15 @@ public class TravelLogController {
     }
 
     @GetMapping("/search/tourist")
-    public ResponseEntity<Page<TravelLog>> searchByTouristId(
-            @RequestParam Integer touristId,
+    public ResponseEntity<Page<TravelLogDto>> searchByTouristId(
+            @RequestParam Long touristId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
         return ResponseEntity.ok(travelLogService.searchByTouristId(touristId, page, size));
     }
 
     @GetMapping("/search/location")
-    public ResponseEntity<Page<TravelLog>> searchByLocation(
+    public ResponseEntity<Page<TravelLogDto>> searchByLocation(
             @RequestParam String location,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {

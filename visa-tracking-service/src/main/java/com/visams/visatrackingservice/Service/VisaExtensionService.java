@@ -1,5 +1,6 @@
 package com.visams.visatrackingservice.Service;
 
+import com.visams.visatrackingservice.Dto.VisaExtensionDto;
 import com.visams.visatrackingservice.Entity.VisaExtension;
 import com.visams.visatrackingservice.Repository.VisaExtensionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class VisaExtensionService {
@@ -19,32 +21,51 @@ public class VisaExtensionService {
     @Autowired
     private VisaExtensionRepository visaExtensionRepository;
 
-    public List<VisaExtension> getAllVisaExtensions(){
-        return visaExtensionRepository.findAll();
+    private VisaExtensionDto toDto(VisaExtension visaExtension){
+        return new VisaExtensionDto(
+                visaExtension.getExtensionId(),
+                visaExtension.getVisa().getVisaId(),
+                visaExtension.getExtendedDate(),
+                visaExtension.getReason());
     }
 
-    public VisaExtension getVisaExtensionById(Integer id){
-        return visaExtensionRepository.findById(id)
+    // view all
+    public List<VisaExtensionDto> getAllVisaExtensions(){
+        return visaExtensionRepository.findAll()
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
+
+    // view by id
+    public VisaExtensionDto getVisaExtensionById(Integer id){
+        VisaExtension visaExtension = visaExtensionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Visa Extension Not Found"));
+        return toDto(visaExtension);
     }
 
-    public VisaExtension createVisaExtension(VisaExtension visaExtension){
-        return visaExtensionRepository.save(visaExtension);
+    // create new one
+    public VisaExtensionDto createVisaExtension(VisaExtensionDto dto){
+        VisaExtension visaExtension = new VisaExtension();
+        visaExtension.setExtendedDate(dto.getExtendedDate());
+        visaExtension.setReason(dto.getReason());
+        return toDto(visaExtensionRepository.save(visaExtension));
     }
 
-    public VisaExtension updateVisaExtension(Integer id, VisaExtension updated){
+    // update
+    public VisaExtensionDto updateVisaExtension(Integer id, VisaExtensionDto updated){
         VisaExtension existing = visaExtensionRepository.findById(id).
                 orElseThrow(() -> new RuntimeException("Visa Extension Not Found"+id));
 
         existing.setExtensionId(updated.getExtensionId());
-        existing.setVisa(updated.getVisa());
         existing.setExtendedDate(updated.getExtendedDate());
         existing.setReason(updated.getReason());
 
-        return visaExtensionRepository.save(existing);
+        return toDto(visaExtensionRepository.save(existing));
     }
 
-    public VisaExtension partialUpdateVisaExtension(Integer id, Map<String,Object> fields){
+    // partially update
+    public VisaExtensionDto partialUpdateVisaExtension(Integer id, Map<String,Object> fields){
         VisaExtension existing = visaExtensionRepository.findById(id).orElseThrow(() -> new RuntimeException("Visa Extension Not Found"+id));
 
         if(fields.containsKey("extendedDate")){
@@ -55,25 +76,28 @@ public class VisaExtensionService {
             existing.setReason((String) fields.get("reason"));
         }
 
-        return visaExtensionRepository.save(existing);
+        return toDto(visaExtensionRepository.save(existing));
     }
 
+    // delete
     public void deleteVisaExtension(Integer id){
         visaExtensionRepository.deleteById(id);
     }
 
-    public Page<VisaExtension> getPageableAllVisaExtensions(int page, int size,String sortBy){
+    // pageable and sorting
+    public Page<VisaExtensionDto> getPageableAllVisaExtensions(int page, int size, String sortBy){
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return visaExtensionRepository.findAll(pageable);
+        return visaExtensionRepository.findAll(pageable).map(this::toDto);
     }
 
-    public Page<VisaExtension> searchByExtensionId(Integer extensionId, int page, int size) {
+    //filtering
+    public Page<VisaExtensionDto> searchByExtensionId(Integer extensionId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return visaExtensionRepository.findByExtensionId(extensionId, pageable);
+        return visaExtensionRepository.findByExtensionId(extensionId, pageable).map(this::toDto);
     }
 
-    public Page<VisaExtension> searchByVisaId(Integer visaId, int page, int size) {
+    public Page<VisaExtensionDto> searchByVisaId(Integer visaId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return visaExtensionRepository.findByVisa_visaId(visaId, pageable);
+        return visaExtensionRepository.findByVisa_visaId(visaId, pageable).map(this::toDto);
     }
 }

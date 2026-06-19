@@ -1,6 +1,7 @@
 package com.visams.visatrackingservice.Service;
 
 import com.visams.visatrackingservice.Dto.VisaExtensionDto;
+import com.visams.visatrackingservice.Entity.Visa;
 import com.visams.visatrackingservice.Entity.VisaExtension;
 import com.visams.visatrackingservice.Repository.VisaExtensionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +48,11 @@ public class VisaExtensionService {
     // create new one
     public VisaExtensionDto createVisaExtension(VisaExtensionDto dto){
         VisaExtension visaExtension = new VisaExtension();
+
+        Visa visa = new Visa();
+        visa.setVisaId(dto.getVisaId());
+        visaExtension.setVisa(visa);
+
         visaExtension.setExtendedDate(dto.getExtendedDate());
         visaExtension.setReason(dto.getReason());
         return toDto(visaExtensionRepository.save(visaExtension));
@@ -54,8 +60,12 @@ public class VisaExtensionService {
 
     // update
     public VisaExtensionDto updateVisaExtension(Integer id, VisaExtensionDto updated){
-        VisaExtension existing = visaExtensionRepository.findById(id).
-                orElseThrow(() -> new RuntimeException("Visa Extension Not Found"+id));
+        VisaExtension existing = visaExtensionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Visa Extension Not Found"+id));
+
+        Visa visa = new Visa();
+        visa.setVisaId(updated.getVisaId());
+        existing.setVisa(visa);
 
         existing.setExtensionId(updated.getExtensionId());
         existing.setExtendedDate(updated.getExtendedDate());
@@ -66,12 +76,17 @@ public class VisaExtensionService {
 
     // partially update
     public VisaExtensionDto partialUpdateVisaExtension(Integer id, Map<String,Object> fields){
-        VisaExtension existing = visaExtensionRepository.findById(id).orElseThrow(() -> new RuntimeException("Visa Extension Not Found"+id));
+        VisaExtension existing = visaExtensionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Visa Extension Not Found"+id));
 
+        if(fields.containsKey("visaId")){
+            Visa visa = new Visa();
+            visa.setVisaId(Integer.valueOf(fields.get("visaId").toString()));
+            existing.setVisa(visa);
+        }
         if(fields.containsKey("extendedDate")){
             existing.setExtendedDate((LocalDate) fields.get("extendedDate"));
         }
-
         if(fields.containsKey("reason")){
             existing.setReason((String) fields.get("reason"));
         }
@@ -90,7 +105,7 @@ public class VisaExtensionService {
         return visaExtensionRepository.findAll(pageable).map(this::toDto);
     }
 
-    //filtering
+    // filtering
     public Page<VisaExtensionDto> searchByExtensionId(Integer extensionId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return visaExtensionRepository.findByExtensionId(extensionId, pageable).map(this::toDto);

@@ -1,6 +1,7 @@
 package com.visams.visatrackingservice.Service;
 
 import com.visams.visatrackingservice.Dto.TravelLogDto;
+import com.visams.visatrackingservice.Entity.Tourist;
 import com.visams.visatrackingservice.Entity.TravelLog;
 import com.visams.visatrackingservice.Repository.TravelLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,11 @@ public class TravelLogService {
     //create
     public TravelLogDto createTravelLog(TravelLogDto dto){
         TravelLog travelLog = new TravelLog();
+
+        Tourist tourist = new Tourist();
+        tourist.setTouristId(dto.getTouristId());
+        travelLog.setTourist(tourist);
+
         travelLog.setLocation(dto.getLocation());
         travelLog.setCheckInDate(dto.getCheckInDate());
         travelLog.setCheckOutDate(dto.getCheckOutDate());
@@ -59,6 +65,10 @@ public class TravelLogService {
     public TravelLogDto updateTravelLog(Integer id, TravelLogDto updated){
         TravelLog existing = travelLogRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Travel Log Not Found"+id));
+
+        Tourist tourist = new Tourist();
+        tourist.setTouristId(updated.getTouristId());
+        existing.setTourist(tourist);
 
         existing.setLogId(updated.getLogId());
         existing.setLocation(updated.getLocation());
@@ -73,14 +83,17 @@ public class TravelLogService {
         TravelLog existing = travelLogRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Travel Log Not Found"+id));
 
+        if(fields.containsKey("touristId")){
+            Tourist tourist = new Tourist();
+            tourist.setTouristId(Long.valueOf(fields.get("touristId").toString()));
+            existing.setTourist(tourist);
+        }
         if(fields.containsKey("location")){
             existing.setLocation((String) fields.get("location"));
         }
-
         if(fields.containsKey("checkInDate")){
             existing.setCheckInDate((LocalDate) fields.get("checkInDate"));
         }
-
         if(fields.containsKey("checkOutDate")){
             existing.setCheckOutDate((LocalDate) fields.get("checkOutDate"));
         }

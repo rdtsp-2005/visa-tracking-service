@@ -32,4 +32,5 @@ public class VisaHistory {
 
     @Column(nullable = false)
     private LocalDateTime actionDate;
+
 }

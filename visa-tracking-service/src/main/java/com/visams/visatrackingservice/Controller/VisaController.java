@@ -18,11 +18,13 @@ public class VisaController {
     @Autowired
     private VisaService visaService;
 
+    //view all
     @GetMapping
     public ResponseEntity<List<VisaDto>> getAllVisas(){
         return ResponseEntity.ok(visaService.getAllVisas());
     }
 
+    //view by id
     @GetMapping("/view/{id}")
     public ResponseEntity<VisaDto> getVisaById(@PathVariable Integer id){
         try{
@@ -33,11 +35,13 @@ public class VisaController {
         }
     }
 
+    // create new one
     @PostMapping
     public ResponseEntity<VisaDto> createVisa(@RequestBody VisaDto visa){
         return ResponseEntity.status(HttpStatus.CREATED).body(visaService.createVisa(visa));
     }
 
+    // update
     @PutMapping("/update/{id}")
     public ResponseEntity<VisaDto> updateVisa(@PathVariable Integer id, @RequestBody VisaDto visa){
         try {
@@ -47,6 +51,7 @@ public class VisaController {
         }
     }
 
+    // partially update
     @PatchMapping("/partialupdate/{id}")
     public ResponseEntity<VisaDto> partialUpdateVisa(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
         try{
@@ -56,6 +61,7 @@ public class VisaController {
         }
     }
 
+    // delete
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteVisa(@PathVariable Integer id){
         visaService.deleteVisa(id);

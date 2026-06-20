@@ -11,22 +11,21 @@ import java.time.LocalDate;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+
 public class VisaExtension {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer extensionId;
 
-    @Column(nullable = false)
-    private Integer visaId;
+    @ManyToOne
+    @JoinColumn(name = "visa_id", nullable = false)
+    private Visa visa;
 
     @Column(nullable = false)
     private LocalDate extendedDate;
 
     @Column(nullable = false)
     private String reason;
-
-    private LocalDate requestedOn;
 
 }

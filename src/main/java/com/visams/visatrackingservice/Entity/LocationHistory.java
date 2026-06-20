@@ -3,28 +3,29 @@ package com.visams.visatrackingservice.Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "travel_logs")
+@Table(name = "location_histories")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class TravelLog {
+public class LocationHistory {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer logId;
+    private Integer locationId;
+
+    @Column(name = "tourist_id", nullable = false)
+    private Long touristId;
 
     @Column(nullable = false)
-    private Integer touristId;
+    private String locationName;
 
     @Column(nullable = false)
-    private String location;
-    
+    private String locationType;
+
     @Column(nullable = false)
-    private LocalDate checkInDate;
-    private LocalDate checkOutDate;
+    private LocalDateTime recordedAt;
 }

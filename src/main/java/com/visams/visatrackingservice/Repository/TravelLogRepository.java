@@ -4,7 +4,9 @@ import com.visams.visatrackingservice.Entity.TravelLog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public interface TravelLogRepository extends JpaRepository<TravelLog, Integer> {
 
     Page<TravelLog> findByLogId(Integer logId, Pageable pageable);

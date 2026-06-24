@@ -15,7 +15,7 @@ import java.util.List;
 public class Visa {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true, nullable = false)
     private Integer visaId;
 
     @OneToMany(mappedBy = "visa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

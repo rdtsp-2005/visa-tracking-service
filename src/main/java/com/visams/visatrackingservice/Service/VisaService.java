@@ -50,6 +50,7 @@ public class VisaService {
     // create
     public VisaDto createVisa(VisaDto dto){
         Visa visa = new Visa();
+        visa.setVisaId(dto.getVisaId()); 
         visa.setTouristId(dto.getTouristId());
         visa.setVisaType(dto.getVisaType());
         visa.setIssueDate(dto.getIssueDate());

@@ -21,7 +21,7 @@ public class Visa {
     @OneToMany(mappedBy = "visa", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<VisaHistory> visaHistories;
 
-    @Column(name = "tourist_id", nullable = false)
+    
     private Long touristId;
 
     @OneToMany(mappedBy = "visa", cascade = CascadeType.ALL)

@@ -25,7 +25,7 @@ public class VisaService {
     private VisaDto toDto(Visa visa){
         return new VisaDto(
                 visa.getVisaId(),
-                visa.getTouristId(),
+                visa.getPassportId(),
                 visa.getVisaType(),
                 visa.getIssueDate(),
                 visa.getExpiryDate(),
@@ -51,7 +51,7 @@ public class VisaService {
     public VisaDto createVisa(VisaDto dto){
         Visa visa = new Visa();
         visa.setVisaId(dto.getVisaId()); 
-        visa.setTouristId(dto.getTouristId());
+        visa.setPassportId(dto.getPassportId());
         visa.setVisaType(dto.getVisaType());
         visa.setIssueDate(dto.getIssueDate());
         visa.setExpiryDate(dto.getExpiryDate());
@@ -65,7 +65,7 @@ public class VisaService {
                 .orElseThrow(() -> new RuntimeException("Visa Not Found"+id));
 
         existing.setVisaId(updated.getVisaId());
-        existing.setTouristId(updated.getTouristId());
+        existing.setPassportId(updated.getPassportId());
         existing.setVisaType(updated.getVisaType());
         existing.setIssueDate(updated.getIssueDate());
         existing.setExpiryDate(updated.getExpiryDate());
@@ -79,8 +79,8 @@ public class VisaService {
         Visa existing = visaRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Visa not found:"+id));
 
-        if(fields.containsKey("touristId")){
-            existing.setTouristId(Long.valueOf(fields.get("touristId").toString()));
+        if(fields.containsKey("passportId")){
+            existing.setPassportId(Long.valueOf(fields.get("passportId").toString()));
         }
         if(fields.containsKey("visaType")){
             existing.setVisaType((String) fields.get("visaType"));
@@ -115,9 +115,9 @@ public class VisaService {
         return visaRepository.findByVisaId(visaId, pageable).map(this::toDto);
     }
 
-    public Page<VisaDto> searchByTouristId(Long touristId, int page, int size){
+    public Page<VisaDto> searchByPassportId(Long passportId, int page, int size){
         Pageable pageable = PageRequest.of(page, size);
-        return visaRepository.findByTouristId(touristId, pageable).map(this::toDto);
+        return visaRepository.findByPassportId(passportId, pageable).map(this::toDto);
     }
 
     public Page<VisaDto> searchByVisaType(String visaType, int page, int size){

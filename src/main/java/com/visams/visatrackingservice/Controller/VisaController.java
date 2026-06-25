@@ -86,12 +86,12 @@ public class VisaController {
         return ResponseEntity.ok(visaService.searchByVisaId(visaId, page, size));
     }
 
-    @GetMapping("/search/tourist")
-    public ResponseEntity<Page<VisaDto>> searchByTouristId(
-            @RequestParam Long touristId,
+    @GetMapping("/search/passport")
+    public ResponseEntity<Page<VisaDto>> searchByPassportId(
+            @RequestParam Long passportId,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(visaService.searchByTouristId(touristId, page, size));
+        return ResponseEntity.ok(visaService.searchByPassportId(passportId, page, size));
     }
 
     @GetMapping("/search/type")

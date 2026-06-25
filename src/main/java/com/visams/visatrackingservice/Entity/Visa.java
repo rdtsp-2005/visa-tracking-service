@@ -22,7 +22,7 @@ public class Visa {
     private List<VisaHistory> visaHistories;
 
     
-    private Long touristId;
+    private Long passportId;
 
     @OneToMany(mappedBy = "visa", cascade = CascadeType.ALL)
     private List<VisaExtension> visaExtensions;

@@ -14,7 +14,7 @@ public interface VisaRepository extends JpaRepository<Visa, Integer> {
 
     Page<Visa> findByVisaId(Integer visaId, Pageable pageable);
 
-    Page<Visa> findByTouristId(Long touristId, Pageable pageable);
+    Page<Visa> findByPassportId(Long passportId, Pageable pageable);
 
     Page<Visa> findByVisaTypeContainingIgnoreCase(String visaType, Pageable pageable);
 

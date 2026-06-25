@@ -12,7 +12,7 @@ import java.time.LocalDate;
 public class VisaDto {
 
     private Integer visaId;
-    private Long touristId;
+    private Long passportId;
     private String visaType;
     private LocalDate issueDate;
     private LocalDate expiryDate;

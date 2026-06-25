@@ -102,4 +102,9 @@ public class VisaController {
         return ResponseEntity.ok(visaService.searchByVisaType(visaType, page, size));
     }
 
+    @GetMapping("/expiring")
+    public ResponseEntity<List<VisaDto>> getExpiringVisas(@RequestParam List<java.time.LocalDate> dates) {
+        return ResponseEntity.ok(visaService.getExpiringVisas(dates));
+    }
+
 }

@@ -124,4 +124,11 @@ public class VisaService {
         Pageable pageable = PageRequest.of(page, size);
         return visaRepository.findByVisaTypeContainingIgnoreCase(visaType, pageable).map(this::toDto);
     }
+
+    public List<VisaDto> getExpiringVisas(List<LocalDate> dates) {
+        return visaRepository.findByExpiryDateInAndStatus(dates, "Active")
+                .stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
+    }
 }

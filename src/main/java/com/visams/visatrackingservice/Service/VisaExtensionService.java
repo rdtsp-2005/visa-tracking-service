@@ -85,7 +85,7 @@ public class VisaExtensionService {
             existing.setVisa(visa);
         }
         if(fields.containsKey("extendedDate")){
-            existing.setExtendedDate((LocalDate) fields.get("extendedDate"));
+            existing.setExtendedDate(LocalDate.parse(fields.get("extendedDate").toString()));
         }
         if(fields.containsKey("reason")){
             existing.setReason((String) fields.get("reason"));

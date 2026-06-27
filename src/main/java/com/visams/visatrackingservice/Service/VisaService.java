@@ -86,10 +86,10 @@ public class VisaService {
             existing.setVisaType((String) fields.get("visaType"));
         }
         if(fields.containsKey("issueDate")){
-            existing.setIssueDate((LocalDate) fields.get("issueDate"));
+            existing.setIssueDate(LocalDate.parse(fields.get("issueDate").toString()));
         }
         if(fields.containsKey("expiryDate")){
-            existing.setExpiryDate((LocalDate) fields.get("expiryDate"));
+            existing.setExpiryDate(LocalDate.parse(fields.get("expiryDate").toString()));
         }
         if(fields.containsKey("status")){
             existing.setStatus((String) fields.get("status"));

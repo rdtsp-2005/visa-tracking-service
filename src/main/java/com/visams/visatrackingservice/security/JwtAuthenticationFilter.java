@@ -1,4 +1,4 @@
-package com.visaMS.security;
+package com.visams.visatrackingservice.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

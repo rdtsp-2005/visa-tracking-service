@@ -1,4 +1,4 @@
-package com.visaMS.security;
+package com.visams.visatrackingservice.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;

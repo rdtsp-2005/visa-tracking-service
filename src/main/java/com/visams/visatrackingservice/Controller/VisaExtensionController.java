@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,12 +21,14 @@ public class VisaExtensionController {
 
     //view all
     @GetMapping
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN', 'TOURIST_POLICE', 'HOTEL_STAFF', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<List<VisaExtensionDto>> getAllVisaExtensions() {
         return ResponseEntity.ok(visaExtensionService.getAllVisaExtensions());
     }
 
     //view by id
     @GetMapping("/view/{id}")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN', 'TOURIST_POLICE', 'HOTEL_STAFF', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<VisaExtensionDto> getVisaExtensionById(@PathVariable Integer id){
         try{
             return ResponseEntity.ok(visaExtensionService.getVisaExtensionById(id));
@@ -36,12 +39,14 @@ public class VisaExtensionController {
 
     // create new record
     @PostMapping
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN')")
     public ResponseEntity<VisaExtensionDto> createVisaExtension(@RequestBody VisaExtensionDto visaExtensionDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(visaExtensionService.createVisaExtension(visaExtensionDto));
     }
 
     // update
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN')")
     public ResponseEntity<VisaExtensionDto> updateVisaExtension(@PathVariable Integer id, @RequestBody VisaExtensionDto visaExtensionDto){
         try{
             return ResponseEntity.ok(visaExtensionService.updateVisaExtension(id, visaExtensionDto));
@@ -52,6 +57,7 @@ public class VisaExtensionController {
 
     // partially update
     @PatchMapping("/partialupdate/{id}")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN')")
     public ResponseEntity<VisaExtensionDto> partialUpdateVisaExtension(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
         try{
             return ResponseEntity.ok(visaExtensionService.partialUpdateVisaExtension(id, fields));
@@ -62,6 +68,7 @@ public class VisaExtensionController {
 
     // delete
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN')")
     public ResponseEntity<Void> deleteVisaExtension(@PathVariable Integer id){
         visaExtensionService.deleteVisaExtension(id);
         return ResponseEntity.noContent().build();
@@ -69,6 +76,7 @@ public class VisaExtensionController {
 
     //pageable and sorting
     @GetMapping("/all")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN', 'TOURIST_POLICE', 'HOTEL_STAFF', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<Page<VisaExtensionDto>> getPageableAllVisaExtension(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -78,6 +86,7 @@ public class VisaExtensionController {
 
     //filtering
     @GetMapping("/search/extension")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN', 'TOURIST_POLICE', 'HOTEL_STAFF', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<Page<VisaExtensionDto>> searchByVisaExtensionId(
             @RequestParam Integer extensionId,
             @RequestParam(defaultValue = "0") int page,
@@ -86,6 +95,7 @@ public class VisaExtensionController {
     }
 
     @GetMapping("/search/visa")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN', 'TOURIST_POLICE', 'HOTEL_STAFF', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<Page<VisaExtensionDto>> searchByVisaId(
             @RequestParam Integer visaId,
             @RequestParam(defaultValue = "0") int page,

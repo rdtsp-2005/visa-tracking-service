@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 import java.util.Map;
@@ -20,12 +21,14 @@ public class VisaHistoryController {
 
     // view all
     @GetMapping
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN', 'TOURIST_POLICE', 'HOTEL_STAFF', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<List<VisaHistoryDto>> getAllVisaHistories(){
         return ResponseEntity.ok(visaHistoryService.getAllVisaHistories());
     }
 
     // view by id
     @GetMapping("/view/{id}")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN', 'TOURIST_POLICE', 'HOTEL_STAFF', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<VisaHistoryDto> getVisaHistoryById(@PathVariable Integer id){
         try{
             return ResponseEntity.ok(visaHistoryService.getVisaHistoryById(id));
@@ -36,12 +39,14 @@ public class VisaHistoryController {
 
     // create
     @PostMapping
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN')")
     public ResponseEntity<VisaHistoryDto> createVisaHistory(@RequestBody VisaHistoryDto visaHistoryDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(visaHistoryService.createVisaHistory(visaHistoryDto));
     }
 
     // update
     @PutMapping("/update/{id}")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN')")
     public ResponseEntity<VisaHistoryDto> updateVisaHistory(@PathVariable Integer id, @RequestBody VisaHistoryDto visaHistoryDto){
         try{
             return ResponseEntity.ok(visaHistoryService.updateVisaHistory(id, visaHistoryDto));
@@ -52,6 +57,7 @@ public class VisaHistoryController {
 
     // partially update
     @PatchMapping("/partialupdate/{id}")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN')")
     public ResponseEntity<VisaHistoryDto> partialUpdateVisaHistory(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
         try{
             return ResponseEntity.ok(visaHistoryService.partialUpdateVisaHistory(id, fields));
@@ -62,6 +68,7 @@ public class VisaHistoryController {
 
     // delete
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN')")
     public ResponseEntity<Void> deleteVisaHistory(@PathVariable Integer id){
         visaHistoryService.deleteVisaHistory(id);
         return ResponseEntity.noContent().build();
@@ -69,6 +76,7 @@ public class VisaHistoryController {
 
     // pagination and sorting
     @GetMapping("/all")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN', 'TOURIST_POLICE', 'HOTEL_STAFF', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<Page<VisaHistoryDto>> getPageableAllVisaHistories(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -78,6 +86,7 @@ public class VisaHistoryController {
 
     // filtering
     @GetMapping("/search/history")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN', 'TOURIST_POLICE', 'HOTEL_STAFF', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<Page<VisaHistoryDto>> searchByHistoryId(
             @RequestParam Integer historyId,
             @RequestParam(defaultValue = "0") int page,
@@ -86,6 +95,7 @@ public class VisaHistoryController {
     }
 
     @GetMapping("/search/visa")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN', 'TOURIST_POLICE', 'HOTEL_STAFF', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<Page<VisaHistoryDto>> searchByVisaId(
             @RequestParam Integer visaId,
             @RequestParam(defaultValue = "0") int page,
@@ -94,6 +104,7 @@ public class VisaHistoryController {
     }
 
     @GetMapping("/search/tourist")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'ADMIN', 'TOURIST_POLICE', 'HOTEL_STAFF', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<Page<VisaHistoryDto>> searchByTouristId(
             @RequestParam Long touristId,
             @RequestParam(defaultValue = "0") int page,

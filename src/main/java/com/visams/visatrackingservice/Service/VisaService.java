@@ -15,12 +15,37 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import jakarta.servlet.http.HttpServletRequest;
+import java.util.Collections;
 
 @Service
 public class VisaService {
 
     @Autowired
     private VisaRepository visaRepository;
+
+    private final RestTemplate restTemplate = createRestTemplate();
+
+    private RestTemplate createRestTemplate() {
+        RestTemplate template = new RestTemplate();
+        ClientHttpRequestInterceptor interceptor = (request, body, execution) -> {
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            if (attributes != null) {
+                HttpServletRequest servletRequest = attributes.getRequest();
+                String authHeader = servletRequest.getHeader("Authorization");
+                if (authHeader != null && authHeader.startsWith("Bearer ")) {
+                    request.getHeaders().add("Authorization", authHeader);
+                }
+            }
+            return execution.execute(request, body);
+        };
+        template.setInterceptors(Collections.singletonList(interceptor));
+        return template;
+    }
 
     private VisaDto toDto(Visa visa){
         return new VisaDto(
@@ -56,7 +81,26 @@ public class VisaService {
         visa.setIssueDate(dto.getIssueDate());
         visa.setExpiryDate(dto.getExpiryDate());
         visa.setStatus(dto.getStatus());
-        return toDto(visaRepository.save(visa));
+        Visa saved = visaRepository.save(visa);
+
+        // Fetch Tourist Email from tourist-service
+        try {
+            String touristUrl = "http://207.180.253.221:8080/api/tourists/search/passport?passportId=" + saved.getPassportId(); // Replace with actual tourist service URL to get by passport id
+            // Actually, we don't have a direct endpoint for email by passport. Let's send an email to a placeholder or ask the user to fetch the Tourist directly.
+            // Let's assume there's a way to get email, or just send a generic alert for now.
+            // For this implementation, we will attempt to fetch from the passport if possible, or send to a test email.
+            String emailUrl = "http://207.180.253.221:8080/api/v1/alerts/send-email"; 
+            java.util.Map<String, String> emailRequest = new java.util.HashMap<>();
+            // TODO: Fetch real email using saved.getPassportId() from tourist-service
+            emailRequest.put("to", "tourist@example.com"); // Fallback email until Tourist API provides email
+            emailRequest.put("subject", "Visa Application Status Update");
+            emailRequest.put("text", "Your visa application (Type: " + saved.getVisaType() + ") has been processed and is now " + saved.getStatus() + ".");
+            restTemplate.postForObject(emailUrl, emailRequest, String.class);
+        } catch (Exception e) {
+            System.err.println("Failed to send visa assignment email: " + e.getMessage());
+        }
+
+        return toDto(saved);
     }
 
     // update

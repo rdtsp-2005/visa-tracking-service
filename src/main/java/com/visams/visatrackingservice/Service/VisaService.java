@@ -85,14 +85,11 @@ public class VisaService {
 
         // Fetch Tourist Email from tourist-service
         try {
-            String touristUrl = "http://207.180.253.221:8080/api/tourists/search/passport?passportId=" + saved.getPassportId(); // Replace with actual tourist service URL to get by passport id
-            // Actually, we don't have a direct endpoint for email by passport. Let's send an email to a placeholder or ask the user to fetch the Tourist directly.
-            // Let's assume there's a way to get email, or just send a generic alert for now.
-            // For this implementation, we will attempt to fetch from the passport if possible, or send to a test email.
-            String emailUrl = "http://207.180.253.221:8080/api/v1/alerts/send-email"; 
+            String touristUrl = "https://tourist-service.panthiya.edu.lk/api/tourists/search/passport?passportId=" + saved.getPassportId(); 
+          
+            String emailUrl = "https://alert-audit-service.panthiya.edu.lk/api/v1/alerts/send-email"; 
             java.util.Map<String, String> emailRequest = new java.util.HashMap<>();
-            // TODO: Fetch real email using saved.getPassportId() from tourist-service
-            emailRequest.put("to", "tourist@example.com"); // Fallback email until Tourist API provides email
+            emailRequest.put("to", "tourist@example.com"); 
             emailRequest.put("subject", "Visa Application Status Update");
             emailRequest.put("text", "Your visa application (Type: " + saved.getVisaType() + ") has been processed and is now " + saved.getStatus() + ".");
             restTemplate.postForObject(emailUrl, emailRequest, String.class);

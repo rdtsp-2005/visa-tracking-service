@@ -21,13 +21,13 @@ public class TravelLogController {
     private TravelLogService travelLogService;
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'IMMIGRATION_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'IMMIGRATION_OFFICER', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<List<TravelLogDto>> getAllTravelLogs(){
         return ResponseEntity.ok(travelLogService.getAllTravelLogs());
     }
 
     @GetMapping("/view/{id}")
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'IMMIGRATION_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'IMMIGRATION_OFFICER', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<TravelLogDto> getTravelLogById(@PathVariable Integer id){
         try {
             return ResponseEntity.ok(travelLogService.getTravelLogById(id));
@@ -37,13 +37,13 @@ public class TravelLogController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<TravelLogDto> createTravelLog(@RequestBody TravelLogDto travelLogDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(travelLogService.createTravelLog(travelLogDto));
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<TravelLogDto> updateTravelLog(@PathVariable Integer id, @RequestBody TravelLogDto travelLogDto){
         try{
             return ResponseEntity.ok(travelLogService.updateTravelLog(id, travelLogDto));
@@ -53,7 +53,7 @@ public class TravelLogController {
     }
 
     @PatchMapping("/partialupdate/{id}")
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<TravelLogDto> partialUpdateTravelLog(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
         try{
             return ResponseEntity.ok(travelLogService.partialUpdateTravelLog(id, fields));
@@ -63,7 +63,7 @@ public class TravelLogController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<Void> deleteTravelLog(@PathVariable Integer id){
         travelLogService.deleteTravelLog(id);
         return ResponseEntity.noContent().build();
@@ -71,7 +71,7 @@ public class TravelLogController {
 
     //pagination and sorting
     @GetMapping("/all")
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'IMMIGRATION_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'IMMIGRATION_OFFICER', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<Page<TravelLogDto>> getPageableAllTravelLogs(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -81,7 +81,7 @@ public class TravelLogController {
 
     //filtering
     @GetMapping("/search/log")
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'IMMIGRATION_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'IMMIGRATION_OFFICER', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<Page<TravelLogDto>> searchByLogId(
             @RequestParam Integer logId,
             @RequestParam(defaultValue = "0") int page,
@@ -90,7 +90,7 @@ public class TravelLogController {
     }
 
     @GetMapping("/search/tourist")
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'IMMIGRATION_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'IMMIGRATION_OFFICER', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<Page<TravelLogDto>> searchByTouristId(
             @RequestParam Long touristId,
             @RequestParam(defaultValue = "0") int page,
@@ -99,7 +99,7 @@ public class TravelLogController {
     }
 
     @GetMapping("/search/location")
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'IMMIGRATION_OFFICER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'IMMIGRATION_OFFICER', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<Page<TravelLogDto>> searchByLocation(
             @RequestParam String location,
             @RequestParam(defaultValue = "0") int page,

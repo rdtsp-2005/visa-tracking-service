@@ -1,4 +1,4 @@
-package com.visams.visatrackingservice.Controller;
+﻿package com.visams.visatrackingservice.Controller;
 
 import com.visams.visatrackingservice.Dto.TravelLogDto;
 import com.visams.visatrackingservice.Service.TravelLogService;
@@ -37,13 +37,13 @@ public class TravelLogController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'TOURIST_POLICE', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<TravelLogDto> createTravelLog(@RequestBody TravelLogDto travelLogDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(travelLogService.createTravelLog(travelLogDto));
     }
 
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'TOURIST_POLICE', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<TravelLogDto> updateTravelLog(@PathVariable Integer id, @RequestBody TravelLogDto travelLogDto){
         try{
             return ResponseEntity.ok(travelLogService.updateTravelLog(id, travelLogDto));
@@ -53,7 +53,7 @@ public class TravelLogController {
     }
 
     @PatchMapping("/partialupdate/{id}")
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'TOURIST_POLICE', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<TravelLogDto> partialUpdateTravelLog(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
         try{
             return ResponseEntity.ok(travelLogService.partialUpdateTravelLog(id, fields));
@@ -63,7 +63,7 @@ public class TravelLogController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'TOURIST_POLICE', 'ADMIN', 'TRAVEL_AGENCY_STAFF')")
     public ResponseEntity<Void> deleteTravelLog(@PathVariable Integer id){
         travelLogService.deleteTravelLog(id);
         return ResponseEntity.noContent().build();

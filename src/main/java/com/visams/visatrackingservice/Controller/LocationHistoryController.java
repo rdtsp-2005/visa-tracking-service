@@ -1,4 +1,4 @@
-package com.visams.visatrackingservice.Controller;
+﻿package com.visams.visatrackingservice.Controller;
 
 import com.visams.visatrackingservice.Dto.LocationHistoryDto;
 import com.visams.visatrackingservice.Service.LocationHistoryService;
@@ -39,14 +39,14 @@ public class LocationHistoryController {
 
     // create
     @PostMapping
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'TOURIST_POLICE', 'ADMIN')")
     public ResponseEntity<LocationHistoryDto> createLocationHistory(@RequestBody LocationHistoryDto locationHistoryDto){
         return ResponseEntity.status(HttpStatus.CREATED).body(locationHistoryService.createLocationHistory(locationHistoryDto));
     }
 
     // update
     @PutMapping("/update/{id}")
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'TOURIST_POLICE', 'ADMIN')")
     public ResponseEntity<LocationHistoryDto> updateLocationHistory(@PathVariable Integer id, @RequestBody LocationHistoryDto locationHistoryDto){
         try{
             return ResponseEntity.ok(locationHistoryService.updateLocationHistory(id, locationHistoryDto));
@@ -57,7 +57,7 @@ public class LocationHistoryController {
 
     // partially update
     @PatchMapping("/partialupdate/{id}")
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'TOURIST_POLICE', 'ADMIN')")
     public ResponseEntity<LocationHistoryDto> partialUpdateLocationHistory(@PathVariable Integer id, @RequestBody Map<String, Object> fields){
         try{
             return ResponseEntity.ok(locationHistoryService.partialUpdateLocationHistory(id, fields));
@@ -68,7 +68,7 @@ public class LocationHistoryController {
 
     // delete
     @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasAnyRole('TOURIST_POLICE', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('IMMIGRATION_OFFICER', 'TOURIST_POLICE', 'ADMIN')")
     public ResponseEntity<Void> deleteLocationHistory(@PathVariable Integer id){
         locationHistoryService.deleteLocationHistory(id);
         return ResponseEntity.noContent().build();

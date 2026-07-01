@@ -1,4 +1,4 @@
-﻿package com.visams.visatrackingservice.Controller;
+package com.visams.visatrackingservice.Controller;
 
 import com.visams.visatrackingservice.Dto.LocationHistoryDto;
 import com.visams.visatrackingservice.Service.LocationHistoryService;

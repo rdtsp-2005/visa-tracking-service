@@ -85,11 +85,14 @@ public class VisaService {
 
         // Fetch Tourist Email from tourist-service
         try {
-            String touristUrl = "https://tourist-service.panthiya.edu.lk/api/tourists/search/passport?passportId=" + saved.getPassportId(); 
-          
-            String emailUrl = "https://alert-audit-service.panthiya.edu.lk/api/v1/alerts/send-email"; 
+            String passportUrl = "http://tourist-service:8080/api/passports/" + saved.getPassportId();
+            java.util.Map<String, Object> passportResponse = restTemplate.getForObject(passportUrl, java.util.Map.class);
+            java.util.Map<String, Object> touristObj = (java.util.Map<String, Object>) passportResponse.get("tourist");
+            String touristEmail = (String) touristObj.get("email");
+
+            String emailUrl = "http://alert-audit-service:8080/api/v1/alerts/send-email"; 
             java.util.Map<String, String> emailRequest = new java.util.HashMap<>();
-            emailRequest.put("to", "tourist@example.com"); 
+            emailRequest.put("to", touristEmail != null ? touristEmail : "tourist@example.com"); 
             emailRequest.put("subject", "Visa Application Status Update");
             emailRequest.put("text", "Your visa application (Type: " + saved.getVisaType() + ") has been processed and is now " + saved.getStatus() + ".");
             restTemplate.postForObject(emailUrl, emailRequest, String.class);
